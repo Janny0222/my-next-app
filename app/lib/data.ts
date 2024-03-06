@@ -7,6 +7,7 @@ import {
   LatestInvoiceRaw,
   User,
   Revenue,
+  Customer,
 } from './definitions';
 import { formatCurrency } from './utils';
 import { unstable_noStore as noStore } from 'next/cache';
@@ -207,8 +208,8 @@ export async function fetchFilteredCustomers(query: string) {
 		  customers.email,
 		  customers.image_url,
 		  COUNT(invoices.id) AS total_invoices,
-		  SUM(CASE WHEN invoices.status = 'pending' THEN invoices.amount ELSE 0 END) AS total_pending,
-		  SUM(CASE WHEN invoices.status = 'paid' THEN invoices.amount ELSE 0 END) AS total_paid
+		  SUM(CASE WHEN invoices.status = 'pending' THEN invoices.amount ELSE 0 END)::numeric AS total_pending,
+		  SUM(CASE WHEN invoices.status = 'paid' THEN invoices.amount ELSE 0 END)::numeric AS total_paid
 		FROM customers
 		LEFT JOIN invoices ON customers.id = invoices.customer_id
 		WHERE
@@ -234,6 +235,16 @@ export async function fetchFilteredCustomers(query: string) {
 export async function getUser(email: string) {
   try {
     const user = await sql`SELECT * FROM users WHERE email=${email}`;
+    return user.rows[0] as User;
+  } catch (error) {
+    console.error('Failed to fetch user:', error);
+    throw new Error('Failed to fetch user.');
+  }
+}
+
+export async function getSpecificUser() {
+  try {
+    const user = await sql`SELECT * FROM users`;
     return user.rows[0] as User;
   } catch (error) {
     console.error('Failed to fetch user:', error);

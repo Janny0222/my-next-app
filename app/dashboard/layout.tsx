@@ -1,4 +1,15 @@
 import SideNav from "../ui/dashboard/sidenav";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: {
+        template: '%s | Greenstone Dashboard',
+        default: 'Greenstone Dashboard'
+    },
+    description: 'The official Next.js Learn Dashboard with app Router.',
+    metadataBase: new URL('https://my-next-app-ten-ashy.vercel.app/')
+    
+}
 
 export default function Layout({ children }: {children: React.ReactNode}){
     return (

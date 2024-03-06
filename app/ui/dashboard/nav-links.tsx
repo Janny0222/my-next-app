@@ -3,10 +3,17 @@ import {
   UserGroupIcon,
   HomeIcon,
   DocumentDuplicateIcon,
+  UserIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
+
+import { getSpecificUser } from '@/app/lib/data';
+import { useEffect, useState } from 'react';
+import { getSession, useSession } from 'next-auth/react';
+
+
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
@@ -18,15 +25,20 @@ const links = [
     icon: DocumentDuplicateIcon,
   },
   { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
+  // { name: `${getUser}`, href: '#', icon: UserIcon },
+  
 ];
 
 export default function NavLinks() {
+ 
   const pathname = usePathname();
-  return (
-    <>
+  return (  
+    
+      <>
       {links.map((paraName) => {
         const LinkIcon = paraName.icon;
         return (
+          <>
           <Link
             key={paraName.name}
             href={paraName.href}
@@ -36,9 +48,12 @@ export default function NavLinks() {
             },
             )}
           >
-            <LinkIcon className="w-6" />
+          <LinkIcon className="w-6" />
             <p className="hidden md:block">{paraName.name}</p>
           </Link>
+          
+          </>
+          
         );
       })}
     </>
